@@ -4,42 +4,88 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cheat Sheets</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="not all">
 <style>
+  /* ---- Themes: each defines base colours; --pole is the extreme (black/white) used by the contrast setting ---- */
   :root {
-    --bg: #ffffff; --fg: #1f2328; --muted: #656d76; --border: #d0d7de;
-    --code-bg: #f6f8fa; --accent: #0969da;
+    --bg0: #ffffff; --fg0: #1f2328; --muted0: #656d76; --border0: #d0d7de;
+    --code-bg: #f6f8fa; --accent: #0969da; --pole: #000000; --err: #cf222e;
+    --contrast: 0; --font-scale: 16px; --line-height: 1.6; --content-width: 860px;
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-code: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    --code-scale: .875rem;
+    color-scheme: light;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0d1117; --fg: #e6edf3; --muted: #8d96a0; --border: #30363d;
-      --code-bg: #161b22; --accent: #4493f8;
-    }
+  :root[data-theme="dark"] {
+    --bg0: #0d1117; --fg0: #e6edf3; --muted0: #8d96a0; --border0: #30363d;
+    --code-bg: #161b22; --accent: #4493f8; --pole: #ffffff; --err: #ff7b72; color-scheme: dark;
   }
+  :root[data-theme="sepia"] {
+    --bg0: #f4ecd8; --fg0: #433422; --muted0: #7a6a55; --border0: #d8c9a8;
+    --code-bg: #ebe0c6; --accent: #8a4b08; --pole: #000000;
+  }
+  :root[data-theme="solarized-light"] {
+    --bg0: #fdf6e3; --fg0: #586e75; --muted0: #7b8b8f; --border0: #e0d8c0;
+    --code-bg: #eee8d5; --accent: #268bd2; --pole: #002b36;
+  }
+  :root[data-theme="solarized-dark"] {
+    --bg0: #002b36; --fg0: #93a1a1; --muted0: #7a8e92; --border0: #0f4350;
+    --code-bg: #073642; --accent: #4aa8e8; --pole: #fdf6e3; --err: #ff6b63; color-scheme: dark;
+  }
+  :root[data-theme="nord"] {
+    --bg0: #2e3440; --fg0: #d8dee9; --muted0: #9aa5b8; --border0: #434c5e;
+    --code-bg: #3b4252; --accent: #88c0d0; --pole: #ffffff; --err: #e88a93; color-scheme: dark;
+  }
+  :root[data-theme="dracula"] {
+    --bg0: #282a36; --fg0: #f8f8f2; --muted0: #a7acc4; --border0: #44475a;
+    --code-bg: #1e1f29; --accent: #bd93f9; --pole: #ffffff; --err: #ff8080; color-scheme: dark;
+  }
+  :root[data-theme="high-contrast-light"] {
+    --bg0: #ffffff; --fg0: #000000; --muted0: #1a1a1a; --border0: #000000;
+    --code-bg: #f0f0f0; --accent: #0000cc; --pole: #000000; --err: #a00000;
+  }
+  :root[data-theme="high-contrast-dark"] {
+    --bg0: #000000; --fg0: #ffffff; --muted0: #e6e6e6; --border0: #ffffff;
+    --code-bg: #121212; --accent: #ffd400; --pole: #ffffff; --err: #ff8a80; color-scheme: dark;
+  }
+
+  /* Contrast: push text/border colours toward the pole colour; muted/border get a stronger push */
+  :root {
+    --bg: var(--bg0);
+    --fg: color-mix(in srgb, var(--fg0), var(--pole) calc(var(--contrast) * 1%));
+    --muted: color-mix(in srgb, var(--muted0), var(--pole) calc(var(--contrast) * 1.2%));
+    --border: color-mix(in srgb, var(--border0), var(--pole) calc(var(--contrast) * 1.5%));
+  }
+
   * { box-sizing: border-box; }
+  html { font-size: var(--font-scale); background: var(--bg); min-height: 100%; }
   body {
+    min-height: 100vh; min-height: 100dvh;
     margin: 0; background: var(--bg); color: var(--fg);
-    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-family: var(--font-body); font-size: 1rem; line-height: var(--line-height);
   }
   header {
     border-bottom: 1px solid var(--border); padding: 12px 16px;
     position: sticky; top: 0; background: var(--bg); z-index: 1;
   }
-  header .inner { max-width: 860px; margin: 0 auto; display: flex; gap: 8px 20px; flex-wrap: wrap; align-items: center; }
+  header .inner { max-width: var(--content-width); margin: 0 auto; display: flex; gap: 8px 20px; flex-wrap: wrap; align-items: center; }
   header h1 { font-size: 1.1rem; margin: 0; }
   header h1 a { color: inherit; text-decoration: none; }
   nav { display: flex; gap: 4px 14px; flex-wrap: wrap; }
-  nav a { color: var(--muted); text-decoration: none; padding: 2px 0; border-bottom: 2px solid transparent; }
-  nav a:hover { color: var(--fg); }
-  nav a.active { color: var(--fg); border-bottom-color: var(--accent); }
-  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 64px; }
+  nav a, .settings-link { color: var(--muted); text-decoration: none; padding: 2px 0; border-bottom: 2px solid transparent; }
+  nav a:hover, .settings-link:hover { color: var(--fg); }
+  nav a.active, .settings-link.active { color: var(--fg); border-bottom-color: var(--accent); }
+  .settings-link { margin-left: auto; }
+  main { max-width: var(--content-width); margin: 0 auto; padding: 24px 16px 64px; }
   main a { color: var(--accent); }
-  h1, h2, h3 { line-height: 1.25; }
+  body.underline-links main a { text-decoration: underline; }
+  h1, h2, h3, h4, h5, h6 { line-height: 1.25; scroll-margin-top: 4rem; }
   h2 { border-bottom: 1px solid var(--border); padding-bottom: .3em; margin-top: 2em; }
-  code { background: var(--code-bg); padding: .15em .4em; border-radius: 4px; font-size: .9em; }
+  code { background: var(--code-bg); padding: .15em .4em; border-radius: 4px; font-size: .9em; font-family: var(--font-code); }
   pre { background: var(--code-bg); padding: 14px; border-radius: 6px; overflow-x: auto; }
-  pre code { background: none; padding: 0; font-size: .875rem; }
+  pre code { background: none; padding: 0; font-size: var(--code-scale); }
+  body.wrap-code pre { white-space: pre-wrap; overflow-wrap: anywhere; }
   table { border-collapse: collapse; display: block; overflow-x: auto; }
   th, td { border: 1px solid var(--border); padding: 6px 12px; }
   blockquote { margin: 0; padding: 0 1em; color: var(--muted); border-left: 4px solid var(--border); }
@@ -47,17 +93,63 @@
   ul.index { list-style: none; padding: 0; }
   ul.index li { border-bottom: 1px solid var(--border); }
   ul.index a { display: block; padding: 12px 0; text-decoration: none; font-size: 1.1rem; }
-  .error { color: #cf222e; }
+  .error { color: var(--err); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  body.reduce-motion * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+  /* highlight.js paints its own code background; keep ours so contrast/theme stays consistent */
+  .hljs { background: transparent !important; }
+
+  /* ---- Settings page ---- */
+  .settings { display: grid; gap: 28px; }
+  .settings fieldset { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px 16px; margin: 0; }
+  .settings legend { font-weight: 600; padding: 0 6px; }
+  .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 6px 0; }
+  .row > label:first-child { min-width: 9.5rem; }
+  .row input[type=range] { flex: 1; min-width: 140px; accent-color: var(--accent); }
+  .row output { min-width: 4.5rem; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .row select, .row input[type=color] { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; }
+  .row input[type=color] { padding: 0; width: 3rem; height: 2rem; }
+  .row input[type=checkbox] { accent-color: var(--accent); width: 1.1rem; height: 1.1rem; }
+  .hint { color: var(--muted); font-size: .85em; margin: 2px 0 0; }
+  .themes { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .theme-card { cursor: pointer; border: 2px solid var(--border); border-radius: 8px; padding: 8px; background: var(--bg); color: var(--fg); font: inherit; text-align: left; }
+  .theme-card[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .swatch { display: block; border-radius: 4px; padding: 8px 10px; margin-bottom: 6px; font-size: .8rem; line-height: 1.3; font-family: var(--font-code); border: 1px solid rgba(128,128,128,.4); }
+  .swatch b { display: block; }
+  .btn { font: inherit; cursor: pointer; color: var(--fg); background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 6px 14px; }
+  .btn:hover { border-color: var(--accent); }
+  .preview { border: 1px dashed var(--border); border-radius: 8px; padding: 4px 16px 12px; }
+
+  /* ---- Back to Table of Contents button ---- */
+  #toc-btn {
+    position: fixed; right: 16px; bottom: 16px; z-index: 2; display: none;
+    font: inherit; font-size: .9rem; cursor: pointer; color: var(--fg); background: var(--code-bg);
+    border: 1px solid var(--border); border-radius: 999px; padding: 8px 14px; box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  #toc-btn:hover { border-color: var(--accent); }
+  #toc-btn.show { display: block; }
 </style>
+<script>
+  // Apply saved settings before first paint to avoid a flash of the wrong theme.
+  (function () {
+    var DEFAULTS = { theme: "system", fontSize: 16, fontFamily: "system", lineHeight: 1.6, width: 860,
+                     contrast: 0, codeSize: 14, accent: "", underline: false, wrap: false, reduceMotion: false };
+    var s = DEFAULTS;
+    try { s = Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem("cs-settings") || "{}")); } catch (e) {}
+    window.CS_DEFAULTS = DEFAULTS; window.CS_SETTINGS = s;
+  })();
+</script>
 </head>
 <body>
 <header>
   <div class="inner">
     <h1><a href="#">Cheat Sheets</a></h1>
     <nav id="nav"></nav>
+    <a class="settings-link" id="settings-link" href="#settings" aria-label="Settings">⚙ Settings</a>
   </div>
 </header>
 <main id="content">Loading…</main>
+<button type="button" id="toc-btn" aria-label="Back to Table of Contents">↑ Contents</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -67,14 +159,178 @@
 
   const nav = document.getElementById("nav");
   const content = document.getElementById("content");
+  const settingsLink = document.getElementById("settings-link");
   const title = s => s.charAt(0).toUpperCase() + s.slice(1);
 
+  /* ---------------- Settings ---------------- */
+  const DEFAULTS = window.CS_DEFAULTS;
+  let settings = window.CS_SETTINGS;
+
+  const THEMES = [
+    { id: "system", name: "System", bg: "linear-gradient(90deg,#fff 50%,#0d1117 50%)", fg: "#888" },
+    { id: "light", name: "Light", bg: "#ffffff", fg: "#1f2328" },
+    { id: "dark", name: "Dark", bg: "#0d1117", fg: "#e6edf3" },
+    { id: "sepia", name: "Sepia", bg: "#f4ecd8", fg: "#433422" },
+    { id: "solarized-light", name: "Solarized Light", bg: "#fdf6e3", fg: "#586e75" },
+    { id: "solarized-dark", name: "Solarized Dark", bg: "#002b36", fg: "#93a1a1" },
+    { id: "nord", name: "Nord", bg: "#2e3440", fg: "#d8dee9" },
+    { id: "dracula", name: "Dracula", bg: "#282a36", fg: "#f8f8f2" },
+    { id: "high-contrast-light", name: "High contrast light", bg: "#fff", fg: "#000" },
+    { id: "high-contrast-dark", name: "High contrast dark", bg: "#000", fg: "#fff" },
+  ];
+  const FONTS = {
+    system: 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+    serif: 'Georgia, "Iowan Old Style", "Times New Roman", serif',
+    humanist: '"Trebuchet MS", "Gill Sans", Verdana, sans-serif',
+    mono: 'ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace',
+  };
+  const FONT_LABELS = { system: "System sans-serif", serif: "Serif", humanist: "Humanist / readable", mono: "Monospace" };
+  const DARK_THEMES = new Set(["dark", "solarized-dark", "nord", "dracula", "high-contrast-dark"]);
+  const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+  function resolvedTheme() {
+    return settings.theme === "system" ? (darkQuery.matches ? "dark" : "light") : settings.theme;
+  }
+
+  function applySettings() {
+    const root = document.documentElement, theme = resolvedTheme();
+    root.dataset.theme = theme;
+    root.style.setProperty("--font-scale", settings.fontSize + "px");
+    root.style.setProperty("--line-height", settings.lineHeight);
+    root.style.setProperty("--content-width", settings.width + "px");
+    root.style.setProperty("--contrast", settings.contrast);
+    root.style.setProperty("--font-body", FONTS[settings.fontFamily] || FONTS.system);
+    root.style.setProperty("--code-scale", settings.codeSize / settings.fontSize + "rem");
+    if (settings.accent) root.style.setProperty("--accent", settings.accent);
+    else root.style.removeProperty("--accent");
+    document.body.classList.toggle("underline-links", !!settings.underline);
+    document.body.classList.toggle("wrap-code", !!settings.wrap);
+    document.body.classList.toggle("reduce-motion", !!settings.reduceMotion);
+    // Swap the highlight.js stylesheet to match the theme's light/dark scheme.
+    const dark = DARK_THEMES.has(theme);
+    document.getElementById("hljs-light").media = dark ? "not all" : "all";
+    document.getElementById("hljs-dark").media = dark ? "all" : "not all";
+  }
+
+  function save() {
+    try { localStorage.setItem("cs-settings", JSON.stringify(settings)); } catch (e) {}
+  }
+  function update(patch) {
+    settings = Object.assign({}, settings, patch);
+    save(); applySettings();
+  }
+  darkQuery.addEventListener("change", applySettings);
+
+  function renderSettings() {
+    document.title = "Settings – Cheat Sheets";
+    const fontOpts = Object.keys(FONTS).map(k =>
+      `<option value="${k}"${settings.fontFamily === k ? " selected" : ""}>${FONT_LABELS[k]}</option>`).join("");
+    content.innerHTML = `
+      <h1>Settings</h1>
+      <p class="hint">Saved in this browser only. Changes apply instantly.</p>
+      <div class="settings">
+        <fieldset>
+          <legend>Theme</legend>
+          <div class="themes" id="themes">${THEMES.map(t => `
+            <button type="button" class="theme-card" data-theme-id="${t.id}" aria-pressed="${settings.theme === t.id}">
+              <span class="swatch" style="background:${t.bg};color:${t.fg}"><b>Aa</b>${"const x = 1;"}</span>${t.name}
+            </button>`).join("")}
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Text</legend>
+          <div class="row"><label for="fontSize">Font size</label>
+            <input type="range" id="fontSize" min="12" max="28" step="1"><output id="fontSize-o"></output></div>
+          <div class="row"><label for="codeSize">Code font size</label>
+            <input type="range" id="codeSize" min="10" max="26" step="1"><output id="codeSize-o"></output></div>
+          <div class="row"><label for="fontFamily">Font</label>
+            <select id="fontFamily">${fontOpts}</select></div>
+          <div class="row"><label for="lineHeight">Line spacing</label>
+            <input type="range" id="lineHeight" min="1.2" max="2.2" step="0.05"><output id="lineHeight-o"></output></div>
+          <div class="row"><label for="width">Content width</label>
+            <input type="range" id="width" min="560" max="1400" step="20"><output id="width-o"></output></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Colour &amp; contrast</legend>
+          <div class="row"><label for="contrast">Contrast boost</label>
+            <input type="range" id="contrast" min="0" max="100" step="5"><output id="contrast-o"></output></div>
+          <p class="hint">Pushes text and borders toward pure black/white for the current theme.</p>
+          <div class="row"><label for="accent">Accent colour</label>
+            <input type="color" id="accent"><button type="button" class="btn" id="accent-reset">Theme default</button></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Reading</legend>
+          <div class="row"><input type="checkbox" id="underline"><label for="underline">Always underline links</label></div>
+          <div class="row"><input type="checkbox" id="wrap"><label for="wrap">Wrap long lines in code blocks</label></div>
+          <div class="row"><input type="checkbox" id="reduceMotion"><label for="reduceMotion">Reduce motion</label></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Preview</legend>
+          <div class="preview">
+            <h2>Sample heading</h2>
+            <p>Body text with a <a href="#settings">link</a>, some <code>inline code</code> and a <em>muted</em> note below.</p>
+            <pre><code>git commit -m "message"   # a long line to show how code blocks look and wrap in this theme</code></pre>
+            <blockquote>A blockquote, using muted colour and border.</blockquote>
+          </div>
+        </fieldset>
+
+        <div class="row"><button type="button" class="btn" id="reset">Reset to defaults</button></div>
+      </div>`;
+
+    const fmt = {
+      fontSize: v => v + " px", codeSize: v => v + " px", lineHeight: v => Number(v).toFixed(2),
+      width: v => v + " px", contrast: v => v + "%",
+    };
+    Object.keys(fmt).forEach(key => {
+      const input = document.getElementById(key), out = document.getElementById(key + "-o");
+      input.value = settings[key]; out.textContent = fmt[key](settings[key]);
+      input.addEventListener("input", () => {
+        const v = Number(input.value);
+        out.textContent = fmt[key](v);
+        update({ [key]: v });
+      });
+    });
+    document.getElementById("fontFamily").addEventListener("change", e => update({ fontFamily: e.target.value }));
+    ["underline", "wrap", "reduceMotion"].forEach(key => {
+      const el = document.getElementById(key);
+      el.checked = !!settings[key];
+      el.addEventListener("change", () => update({ [key]: el.checked }));
+    });
+    const accent = document.getElementById("accent");
+    accent.value = settings.accent || getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+    accent.addEventListener("input", () => update({ accent: accent.value }));
+    document.getElementById("accent-reset").addEventListener("click", () => {
+      update({ accent: "" });
+      accent.value = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+    });
+    document.getElementById("themes").addEventListener("click", e => {
+      const card = e.target.closest(".theme-card");
+      if (!card) return;
+      update({ theme: card.dataset.themeId });
+      document.querySelectorAll(".theme-card").forEach(c =>
+        c.setAttribute("aria-pressed", String(c === card)));
+      if (!settings.accent) accent.value = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+    });
+    document.getElementById("reset").addEventListener("click", () => {
+      settings = Object.assign({}, DEFAULTS);
+      save(); applySettings(); renderSettings();
+    });
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------------- Router ---------------- */
   nav.innerHTML = SHEETS.map(s => `<a href="#${s}" data-s="${s}">${title(s)}</a>`).join("");
 
   async function route() {
     const name = decodeURIComponent(location.hash.slice(1));
     nav.querySelectorAll("a").forEach(a => a.classList.toggle("active", a.dataset.s === name));
+    settingsLink.classList.toggle("active", name === "settings");
 
+    if (name === "settings") { renderSettings(); return; }
     if (!SHEETS.includes(name)) {
       document.title = "Cheat Sheets";
       content.innerHTML = "<h1>Cheat Sheets</h1><ul class='index'>" +
@@ -86,6 +342,7 @@
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       content.innerHTML = marked.parse(await res.text());
       content.querySelectorAll("pre code").forEach(el => hljs.highlightElement(el));
+      assignHeadingIds();
       document.title = `${title(name)} – Cheat Sheets`;
       window.scrollTo(0, 0);
     } catch (e) {
@@ -93,6 +350,47 @@
     }
   }
 
+  /* In-page links from markdown (e.g. "#1-setup") must scroll to a heading, not change the route. */
+  function assignHeadingIds() {
+    const seen = {};
+    content.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(h => {
+      const base = h.textContent.trim().toLowerCase()
+        .replace(/[^\p{L}\p{N}\s_-]/gu, "").replace(/\s/g, "-");
+      const n = seen[base] = (seen[base] ?? -1) + 1;
+      h.id = n ? `${base}-${n}` : base;
+    });
+  }
+
+  content.addEventListener("click", e => {
+    const a = e.target.closest("a[href^='#']");
+    if (!a) return;
+    const id = decodeURIComponent(a.getAttribute("href").slice(1));
+    if (!id || id === "settings" || SHEETS.includes(id)) return;
+    const target = document.getElementById(id);
+    if (!target || !content.contains(target)) return;
+    e.preventDefault();
+    target.scrollIntoView();
+  });
+
+  /* ---------------- Back to Table of Contents ---------------- */
+  const tocBtn = document.getElementById("toc-btn");
+  function findToc() {
+    return [...content.querySelectorAll("h1, h2, h3")].find(h => /^table of contents$/i.test(h.textContent.trim()));
+  }
+  function updateTocBtn() {
+    const toc = findToc();
+    // Show only on pages that have a TOC, once its heading has scrolled out of view above.
+    tocBtn.classList.toggle("show", !!toc && toc.getBoundingClientRect().bottom < 0);
+  }
+  tocBtn.addEventListener("click", () => {
+    const toc = findToc();
+    if (toc) toc.scrollIntoView({ behavior: settings.reduceMotion ? "auto" : "smooth" });
+  });
+  window.addEventListener("scroll", updateTocBtn, { passive: true });
+  window.addEventListener("hashchange", () => setTimeout(updateTocBtn, 0));
+  new MutationObserver(updateTocBtn).observe(content, { childList: true });
+
+  applySettings();
   window.addEventListener("hashchange", route);
   route();
 </script>
